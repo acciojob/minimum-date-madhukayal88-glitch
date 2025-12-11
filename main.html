@@ -1,16 +1,46 @@
 <!DOCTYPE html>
-
 <html>
-
 <head>
-	<link rel="stylesheet" href="styles.css">
+    <title>Minimum Date Finder</title>
 </head>
-
 <body>
-	<!-- the entire body must be written by student -->
-    <script type="text/javascript" src="./script.js">
-</script>
+    <h3>Minimum Date Finder</h3>
+    <input type="text" id="datesInput" placeholder='["2023/03/01", "2023/03/02", "2023/03/03"]' style="width: 400px;">
+    <button onclick="findMinDate()">Find Minimum Date</button>
+    <p><strong>Result: </strong><span id="result"></span></p>
 
+    <script>
+        function minDate(dates) {
+            if (!dates || dates.length === 0) return null;
+            
+            // Convert date string "YYYY/MM/DD" to comparable array [year, month, day]
+            function parseDate(dateStr) {
+                return dateStr.split('/').map(Number);
+            }
+            
+            // Find minimum using parsed date arrays for chronological comparison
+            return dates.reduce((min, current) => {
+                const minParts = parseDate(min);
+                const currParts = parseDate(current);
+                return minParts[0] < currParts[0] || 
+                       (minParts[0] === currParts[0] && minParts[1] < currParts[1]) ||
+                       (minParts[0] === currParts[0] && minParts[1] === currParts[1] && minParts[2] < currParts[2])
+                    ? min : current;
+            });
+        }
+
+        function findMinDate() {
+            const input = document.getElementById('datesInput').value;
+            let dates;
+            
+            try {
+                dates = JSON.parse(input);
+                const result = minDate(dates);
+                document.getElementById('result').textContent = result || 'No dates provided';
+            } catch (e) {
+                document.getElementById('result').textContent = 'Invalid JSON format';
+            }
+        }
+    </script>
 </body>
-
 </html>
